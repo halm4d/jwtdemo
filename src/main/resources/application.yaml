@@ -1,0 +1,9 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/jwtdemo
+jwt:
+  secret: changeThisSecret
+  expiration: 600000
+  tokenPrefix: Bearer
+  headerKey: Authorization
