@@ -7,9 +7,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "jwt")
 public class JwtProperties {
 
-    private String secret = "changeit";
+    private String jwtSecret = "changeit";
+    private String refreshTokenSecret = "changeit123"; // TODO átvinni az onboardingba
     private long expiration = 300000;
-    private String tokenPrefix = "Bearer";
-    private String headerKey = "Authorization";
+    private long refreshTokenExpiration = 3600000; // TODO átvinni az onboardingba
 
 }

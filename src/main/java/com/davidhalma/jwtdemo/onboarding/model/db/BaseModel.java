@@ -1,4 +1,4 @@
-package com.davidhalma.jwtdemo.user.model.db;
+package com.davidhalma.jwtdemo.onboarding.model.db;
 
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;

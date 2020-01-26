@@ -1,4 +1,4 @@
-package com.davidhalma.jwtdemo.user.model;
+package com.davidhalma.jwtdemo.onboarding.model;
 
 import lombok.Data;
 

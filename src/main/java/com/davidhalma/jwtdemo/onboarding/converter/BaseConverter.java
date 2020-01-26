@@ -1,4 +1,4 @@
-package com.davidhalma.jwtdemo.user.converter;
+package com.davidhalma.jwtdemo.onboarding.converter;
 
 public interface BaseConverter<T, K> {
     T to(K k);

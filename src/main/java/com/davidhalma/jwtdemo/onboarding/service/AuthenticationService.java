@@ -1,8 +1,8 @@
-package com.davidhalma.jwtdemo.user.service;
+package com.davidhalma.jwtdemo.onboarding.service;
 
-import com.davidhalma.jwtdemo.user.model.AuthenticationRequest;
-import com.davidhalma.jwtdemo.user.model.business.User;
-import com.davidhalma.jwtdemo.user.model.db.MDBUser;
+import com.davidhalma.jwtdemo.onboarding.model.AuthenticationRequest;
+import com.davidhalma.jwtdemo.onboarding.model.business.User;
+import com.davidhalma.jwtdemo.onboarding.model.db.MDBUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

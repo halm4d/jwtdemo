@@ -1,7 +1,7 @@
-package com.davidhalma.jwtdemo.user.service;
+package com.davidhalma.jwtdemo.onboarding.service;
 
-import com.davidhalma.jwtdemo.user.model.db.MDBUser;
-import com.davidhalma.jwtdemo.user.repository.UserRepository;
+import com.davidhalma.jwtdemo.onboarding.model.db.MDBUser;
+import com.davidhalma.jwtdemo.onboarding.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

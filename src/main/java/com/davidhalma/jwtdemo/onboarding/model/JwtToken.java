@@ -1,11 +1,13 @@
-package com.davidhalma.jwtdemo.user.model;
+package com.davidhalma.jwtdemo.onboarding.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
+@Builder
 public class JwtToken {
 
     @JsonProperty("token")

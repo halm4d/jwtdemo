@@ -1,4 +1,4 @@
-package com.davidhalma.jwtdemo.user.security;
+package com.davidhalma.jwtdemo.onboarding.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,9 +26,10 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable()
-                .authorizeRequests()
-                .anyRequest().permitAll().and()
+        httpSecurity
+                .csrf().disable()
+                .authorizeRequests().anyRequest().permitAll()
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

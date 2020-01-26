@@ -1,4 +1,4 @@
-package com.davidhalma.jwtdemo.user.model.business;
+package com.davidhalma.jwtdemo.onboarding.model.business;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;

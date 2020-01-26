@@ -1,8 +1,7 @@
-package com.davidhalma.jwtdemo.user.repository;
+package com.davidhalma.jwtdemo.onboarding.repository;
 
-import com.davidhalma.jwtdemo.user.model.db.MDBUser;
+import com.davidhalma.jwtdemo.onboarding.model.db.MDBUser;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 

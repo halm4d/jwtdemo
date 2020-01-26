@@ -1,7 +1,7 @@
-package com.davidhalma.jwtdemo.user.converter;
+package com.davidhalma.jwtdemo.onboarding.converter;
 
-import com.davidhalma.jwtdemo.user.model.business.User;
-import com.davidhalma.jwtdemo.user.model.db.MDBUser;
+import com.davidhalma.jwtdemo.onboarding.model.business.User;
+import com.davidhalma.jwtdemo.onboarding.model.db.MDBUser;
 import org.springframework.stereotype.Component;
 
 @Component
