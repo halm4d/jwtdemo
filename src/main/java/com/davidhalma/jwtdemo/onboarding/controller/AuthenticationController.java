@@ -29,9 +29,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.register(authenticationRequest));
     }
 
-    @JwtSecured
     @PostMapping("/refreshToken")
-    public ResponseEntity<?> refreshToken(@RequestHeader("refresh-token") String refreshToken) throws Exception {
+    public ResponseEntity<?> refreshToken(@RequestHeader("Authorization") String refreshToken) throws Exception {
         return ResponseEntity.ok(jwtAuthenticationService.refreshToken(refreshToken));
     }
 

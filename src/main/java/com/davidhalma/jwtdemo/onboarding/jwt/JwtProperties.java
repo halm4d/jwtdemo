@@ -1,4 +1,4 @@
-package com.davidhalma.jwtdemo.jwtframework.config;
+package com.davidhalma.jwtdemo.onboarding.jwt;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -7,9 +7,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "jwt")
 public class JwtProperties {
 
-    private String jwtSecret = "changeit";
+    private String accessTokenSecret = "changeit";
+    private long accessTokenExpiration = 300000;
     private String refreshTokenSecret = "changeit123"; // TODO átvinni az onboardingba
-    private long expiration = 300000;
     private long refreshTokenExpiration = 3600000; // TODO átvinni az onboardingba
 
 }

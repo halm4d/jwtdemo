@@ -1,6 +1,8 @@
 package com.davidhalma.jwtdemo.jwt;
 
-import com.davidhalma.jwtdemo.jwtframework.util.JwtTokenUtils;
+import com.davidhalma.jwtdemo.jwtframework.util.JwtTokenValidator;
+import com.davidhalma.jwtdemo.onboarding.jwt.JwtTokenService;
+import com.davidhalma.jwtdemo.onboarding.jwt.TokenType;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,17 +16,19 @@ import java.util.Collection;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doThrow;
 
 @RunWith(SpringRunner.class)
-class JwtTokenUtilsTest {
+class JwtTokenValidatorTest {
 
     @Mock
-    JwtTokenUtils jwtTokenUtils;
+    JwtTokenValidator jwtTokenValidator;
+
+    @Mock
+    JwtTokenService jwtTokenService;
 
     @BeforeEach
     void setUp() {
-        jwtTokenUtils = new JwtTokenUtils();
+        jwtTokenValidator = new JwtTokenValidator();
     }
 
     private UserDetails generateTestUserDetails(){
@@ -67,7 +71,7 @@ class JwtTokenUtilsTest {
     }
 
     private String generateValidToken() {
-        return jwtTokenUtils.generateJwtToken(generateTestUserDetails());
+        return jwtTokenService.generateJwtToken(generateTestUserDetails(), TokenType.JWT);
     }
 
     @Test
@@ -79,30 +83,30 @@ class JwtTokenUtilsTest {
 
     @Test
     void isValidToken() {
-        jwtTokenUtils.validateToken(generateValidToken());
+        jwtTokenValidator.validateToken(generateValidToken());
     }
 
     @Test
     void getUsernameFromToken() {
-        assertEquals("username123", jwtTokenUtils.getUsernameFromToken(generateValidToken()));
+        assertEquals("username123", jwtTokenService.getUsernameFromToken(generateValidToken(), TokenType.JWT));
     }
 
     @Test
     void getExpirationDateFromToken() {
-        assertNotNull(jwtTokenUtils.getExpirationDateFromToken(generateValidToken()));
-        assertTrue(jwtTokenUtils.getExpirationDateFromToken(generateValidToken()).after(new Date()));
+        assertNotNull(jwtTokenService.getExpirationDateFromToken(generateValidToken(), TokenType.JWT));
+        assertTrue(jwtTokenService.getExpirationDateFromToken(generateValidToken(), TokenType.JWT).after(new Date()));
     }
 
     @Test
     void getClaimFromToken() {
-        assertEquals("username123", jwtTokenUtils.getClaimFromToken(generateValidToken(), Claims::getSubject));
-        assertNotNull(jwtTokenUtils.getClaimFromToken(generateValidToken(), Claims::getExpiration));
-        assertNotNull(jwtTokenUtils.getClaimFromToken(generateValidToken(), Claims::getIssuedAt));
+        assertEquals("username123", jwtTokenService.getClaimFromToken(generateValidToken(), TokenType.JWT, Claims::getSubject));
+        assertNotNull(jwtTokenService.getClaimFromToken(generateValidToken(), TokenType.JWT, Claims::getExpiration));
+        assertNotNull(jwtTokenService.getClaimFromToken(generateValidToken(), TokenType.JWT, Claims::getIssuedAt));
     }
 
     @Test
     void getAllClaimsFromToken() {
-        assertNotNull(jwtTokenUtils.getAllClaimsFromToken(generateValidToken()));
-        assertFalse(jwtTokenUtils.getAllClaimsFromToken(generateValidToken()).isEmpty());
+        assertNotNull(jwtTokenService.getAllClaimsFromToken(generateValidToken(), TokenType.JWT));
+        assertFalse(jwtTokenService.getAllClaimsFromToken(generateValidToken(), TokenType.JWT).isEmpty());
     }
 }

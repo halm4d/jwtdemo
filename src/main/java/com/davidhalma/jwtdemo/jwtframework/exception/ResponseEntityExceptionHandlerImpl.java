@@ -15,8 +15,8 @@ import java.util.Date;
 @ControllerAdvice
 public class ResponseEntityExceptionHandlerImpl extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(BadAuthorizationHeaderException.class)
-    public final ResponseEntity handleNotFoundException(BadAuthorizationHeaderException ex, WebRequest request) {
+    @ExceptionHandler(JwtTokenException.class)
+    public final ResponseEntity handleNotFoundException(JwtTokenException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), HttpStatus.UNAUTHORIZED, ex.getMessage(), getRequestURI(request));
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDetails);
     }
