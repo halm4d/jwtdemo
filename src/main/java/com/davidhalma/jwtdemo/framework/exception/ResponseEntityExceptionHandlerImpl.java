@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.util.Date;
 
 @RestController
 @ControllerAdvice
-public class ResponseEntityExceptionHandlerImpl extends ResponseEntityExceptionHandler {
+public class ResponseEntityExceptionHandlerImpl extends ExceptionHandlerExceptionResolver {
 
     @ExceptionHandler(Throwable.class)
     public final ResponseEntity<ErrorDetails> handleNotFoundException(Throwable ex, WebRequest request) {

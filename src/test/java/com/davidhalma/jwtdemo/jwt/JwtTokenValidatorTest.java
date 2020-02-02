@@ -71,7 +71,7 @@ class JwtTokenValidatorTest {
     }
 
     private String generateValidToken() {
-        return jwtTokenService.generateJwtToken(generateTestUserDetails(), TokenType.JWT);
+        return jwtTokenService.generateJwtToken(generateTestUserDetails(), TokenType.ACCESS);
     }
 
     @Test
@@ -88,25 +88,25 @@ class JwtTokenValidatorTest {
 
     @Test
     void getUsernameFromToken() {
-        assertEquals("username123", jwtTokenService.getUsernameFromToken(generateValidToken(), TokenType.JWT));
+        assertEquals("username123", jwtTokenService.getUsernameFromToken(generateValidToken(), TokenType.ACCESS));
     }
 
     @Test
     void getExpirationDateFromToken() {
-        assertNotNull(jwtTokenService.getExpirationDateFromToken(generateValidToken(), TokenType.JWT));
-        assertTrue(jwtTokenService.getExpirationDateFromToken(generateValidToken(), TokenType.JWT).after(new Date()));
+        assertNotNull(jwtTokenService.getExpirationDateFromToken(generateValidToken(), TokenType.ACCESS));
+        assertTrue(jwtTokenService.getExpirationDateFromToken(generateValidToken(), TokenType.ACCESS).after(new Date()));
     }
 
     @Test
     void getClaimFromToken() {
-        assertEquals("username123", jwtTokenService.getClaimFromToken(generateValidToken(), TokenType.JWT, Claims::getSubject));
-        assertNotNull(jwtTokenService.getClaimFromToken(generateValidToken(), TokenType.JWT, Claims::getExpiration));
-        assertNotNull(jwtTokenService.getClaimFromToken(generateValidToken(), TokenType.JWT, Claims::getIssuedAt));
+        assertEquals("username123", jwtTokenService.getClaimFromToken(generateValidToken(), TokenType.ACCESS, Claims::getSubject));
+        assertNotNull(jwtTokenService.getClaimFromToken(generateValidToken(), TokenType.ACCESS, Claims::getExpiration));
+        assertNotNull(jwtTokenService.getClaimFromToken(generateValidToken(), TokenType.ACCESS, Claims::getIssuedAt));
     }
 
     @Test
     void getAllClaimsFromToken() {
-        assertNotNull(jwtTokenService.getAllClaimsFromToken(generateValidToken(), TokenType.JWT));
-        assertFalse(jwtTokenService.getAllClaimsFromToken(generateValidToken(), TokenType.JWT).isEmpty());
+        assertNotNull(jwtTokenService.getAllClaimsFromToken(generateValidToken(), TokenType.ACCESS));
+        assertFalse(jwtTokenService.getAllClaimsFromToken(generateValidToken(), TokenType.ACCESS).isEmpty());
     }
 }

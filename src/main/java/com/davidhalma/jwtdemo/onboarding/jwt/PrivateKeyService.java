@@ -1,7 +1,7 @@
 package com.davidhalma.jwtdemo.onboarding.jwt;
 
 import com.davidhalma.jwtdemo.jwtframework.util.JwtUtils;
-import com.davidhalma.jwtdemo.jwtframework.util.KeyService;
+import com.davidhalma.jwtdemo.jwtframework.service.KeyService;
 import com.davidhalma.jwtdemo.jwtframework.util.PropertyUtils;
 import com.davidhalma.jwtdemo.jwtframework.util.TokenType;
 import lombok.extern.log4j.Log4j2;
@@ -25,10 +25,7 @@ public class PrivateKeyService implements KeyService {
     public Key getKey(TokenType tokenType) {
         KeyStore keystore = jwtUtils.getKeyStore(tokenType);
         try {
-            String alias = propertyUtils.getAlias(tokenType);
-            String keyPassword = propertyUtils.getKeyPassword(tokenType);
-            PrivateKey key = (PrivateKey) keystore.getKey(alias, keyPassword.toCharArray());
-            return key;
+            return keystore.getKey(propertyUtils.getAlias(tokenType), propertyUtils.getKeyPassword(tokenType).toCharArray());
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
             log.error(e.getMessage());
         }

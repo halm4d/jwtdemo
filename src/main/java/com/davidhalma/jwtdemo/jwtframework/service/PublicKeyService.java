@@ -1,7 +1,6 @@
 package com.davidhalma.jwtdemo.jwtframework.service;
 
 import com.davidhalma.jwtdemo.jwtframework.util.JwtUtils;
-import com.davidhalma.jwtdemo.jwtframework.util.KeyService;
 import com.davidhalma.jwtdemo.jwtframework.util.PropertyUtils;
 import com.davidhalma.jwtdemo.jwtframework.util.TokenType;
 import lombok.extern.log4j.Log4j2;

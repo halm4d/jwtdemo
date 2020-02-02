@@ -3,14 +3,15 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/jwtdemo
 jwt:
-  key:
-    access:
+  access:
+    key:
       alias: "keyAliasAccess"
       keystoreJks: "access-keystore.jks"
       jksPassword: "changeit"
       keyPassword: "changeit"
       expiration: 600000
-    refresh:
+  refresh:
+    key:
       alias: "keyAliasRefresh"
       keystoreJks: "refresh-keystore.jks"
       jksPassword: "changeit"

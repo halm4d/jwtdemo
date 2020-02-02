@@ -29,7 +29,7 @@ public class JwtTokenValidator {
 
     public Jws<Claims> parseClaimsJws(String token) {
         try {
-            Key publicKey = publicKeyService.getKey(TokenType.JWT);
+            Key publicKey = publicKeyService.getKey(TokenType.ACCESS);
             return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(getJwtToken(token));
         }catch (ExpiredJwtException e){
             throw new JwtTokenException("JWT token expired.");

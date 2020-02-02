@@ -35,7 +35,7 @@ public class JwtAuthenticationService {
 
     private JwtToken generateJwtToken(String username) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        String token = jwtTokenService.generateJwtToken(userDetails, TokenType.JWT);
+        String token = jwtTokenService.generateJwtToken(userDetails, TokenType.ACCESS);
         String refreshToken = jwtTokenService.generateJwtToken(userDetails, TokenType.REFRESH);
         return convertJwtToken(token, refreshToken);
     }
@@ -44,7 +44,7 @@ public class JwtAuthenticationService {
         return JwtToken.builder()
                 .token(token)
                 .refreshToken(refreshToken)
-                .expirationDate(jwtTokenService.getExpirationDateFromToken(token, TokenType.JWT))
+                .expirationDate(jwtTokenService.getExpirationDateFromToken(token, TokenType.ACCESS))
                 .build();
     }
 
