@@ -1,31 +1,46 @@
 package com.davidhalma.jwtdemo.onboarding.jwt;
 
+import com.davidhalma.jwtdemo.jwtframework.service.PublicKeyService;
 import com.davidhalma.jwtdemo.jwtframework.exception.JwtTokenException;
+import com.davidhalma.jwtdemo.jwtframework.util.PropertyUtils;
+import com.davidhalma.jwtdemo.jwtframework.util.TokenType;
 import io.jsonwebtoken.*;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.security.Key;
+import java.security.PublicKey;
 import java.util.Date;
 import java.util.function.Function;
 
 @Service
 @Log4j2
-@RequiredArgsConstructor
 public class JwtTokenService {
 
     private static final String TOKEN_PREFIX_WITH_WHITESPACE = "Bearer ";
 
-    private final JwtProperties jwtProperties;
+    private final PublicKeyService publicKeyService;
+    private final PrivateKeyService privateKeyService;
+    private final PropertyUtils propertyUtils;
+
+
+    @Autowired
+    public JwtTokenService(PublicKeyService publicKeyService, PrivateKeyService privateKeyService, PropertyUtils propertyUtils) {
+        this.publicKeyService = publicKeyService;
+        this.privateKeyService = privateKeyService;
+        this.propertyUtils = propertyUtils;
+    }
 
     public String generateJwtToken(UserDetails userDetails, TokenType tokenType){
+        Key privateKey = privateKeyService.getKey(tokenType);
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setSubject(userDetails.getUsername())
-                .setExpiration(new Date(System.currentTimeMillis() + getExpiration(tokenType)))
+                .setExpiration(new Date(System.currentTimeMillis() + propertyUtils.getExpiration(tokenType)))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .signWith(SignatureAlgorithm.HS512, getSecret(tokenType))
+                .signWith(SignatureAlgorithm.RS256, privateKey)
                 .compact();
     }
 
@@ -47,7 +62,8 @@ public class JwtTokenService {
 
     private Jws<Claims> parseClaimsJws(String token, TokenType tokenType) {
         try {
-            return Jwts.parser().setSigningKey(getSecret(tokenType)).parseClaimsJws(getJwtToken(token));
+            PublicKey publicKey = publicKeyService.getKey(tokenType);
+            return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(getJwtToken(token));
         }catch (ExpiredJwtException e){
             throw new JwtTokenException("JWT token expired.");
         }catch (IllegalArgumentException e){
@@ -63,21 +79,5 @@ public class JwtTokenService {
 
     private String getJwtToken(String requestTokenHeader) {
         return requestTokenHeader.replace(TOKEN_PREFIX_WITH_WHITESPACE, "");
-    }
-
-    private String getSecret(TokenType tokenType) {
-        switch (tokenType){
-            case JWT: return jwtProperties.getAccessTokenSecret();
-            case REFRESH: return jwtProperties.getRefreshTokenSecret();
-            default: throw new IllegalArgumentException("TokenType not exist.");
-        }
-    }
-
-    private long getExpiration(TokenType tokenType) {
-        switch (tokenType) {
-            case JWT: return jwtProperties.getAccessTokenExpiration();
-            case REFRESH: return jwtProperties.getRefreshTokenExpiration();
-            default: throw new IllegalArgumentException("TokenType not exist.");
-        }
     }
 }

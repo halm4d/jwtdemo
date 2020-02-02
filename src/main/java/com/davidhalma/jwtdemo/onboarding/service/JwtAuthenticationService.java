@@ -1,8 +1,8 @@
 package com.davidhalma.jwtdemo.onboarding.service;
 
 import com.davidhalma.jwtdemo.onboarding.exception.AuthenticationException;
-import com.davidhalma.jwtdemo.onboarding.jwt.TokenType;
-import com.davidhalma.jwtdemo.jwtframework.util.JwtTokenValidator;
+import com.davidhalma.jwtdemo.jwtframework.util.TokenType;
+import com.davidhalma.jwtdemo.jwtframework.service.JwtTokenValidator;
 import com.davidhalma.jwtdemo.onboarding.jwt.JwtTokenService;
 import com.davidhalma.jwtdemo.onboarding.model.JwtToken;
 import com.davidhalma.jwtdemo.onboarding.model.AuthenticationRequest;

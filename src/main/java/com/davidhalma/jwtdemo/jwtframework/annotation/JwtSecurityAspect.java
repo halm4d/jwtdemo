@@ -1,7 +1,6 @@
 package com.davidhalma.jwtdemo.jwtframework.annotation;
 
-import com.davidhalma.jwtdemo.onboarding.jwt.JwtProperties;
-import com.davidhalma.jwtdemo.jwtframework.util.JwtTokenValidator;
+import com.davidhalma.jwtdemo.jwtframework.service.JwtTokenValidator;
 import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;

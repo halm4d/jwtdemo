@@ -1,30 +1,36 @@
-package com.davidhalma.jwtdemo.jwtframework.util;
+package com.davidhalma.jwtdemo.jwtframework.service;
 
 import com.davidhalma.jwtdemo.jwtframework.exception.JwtTokenException;
+import com.davidhalma.jwtdemo.jwtframework.util.TokenType;
 import io.jsonwebtoken.*;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-@Component
+import java.security.Key;
+
+@Service
 @Log4j2
 public class JwtTokenValidator {
 
     private static final String AUTHORIZATION_HEADER_KEY = "Authorization";
     private static final String TOKEN_PREFIX_WITH_WHITESPACE = "Bearer ";
 
-    @Value("${jwt.accessTokenSecret}")
-    public String SECRET;
+    private final PublicKeyService publicKeyService;
+
+    public JwtTokenValidator(PublicKeyService publicKeyService) {
+        this.publicKeyService = publicKeyService;
+    }
 
     public void validateToken(String token){
         validateRequestTokenHeader(token);
         parseClaimsJws(token);
     }
 
-    private void parseClaimsJws(String token) {
+    public Jws<Claims> parseClaimsJws(String token) {
         try {
-            Jwts.parser().setSigningKey(SECRET).parseClaimsJws(getJwtToken(token));
+            Key publicKey = publicKeyService.getKey(TokenType.JWT);
+            return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(getJwtToken(token));
         }catch (ExpiredJwtException e){
             throw new JwtTokenException("JWT token expired.");
         }catch (IllegalArgumentException e){

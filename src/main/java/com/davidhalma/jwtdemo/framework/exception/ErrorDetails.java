@@ -1,4 +1,4 @@
-package com.davidhalma.jwtdemo.jwtframework.exception;
+package com.davidhalma.jwtdemo.framework.exception;
 
 import lombok.Data;
 import org.springframework.http.HttpStatus;

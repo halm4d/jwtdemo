@@ -3,7 +3,16 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/jwtdemo
 jwt:
-  accessTokenSecret: changeThisSecret
-  accessTokenExpiration: 600000
-  refreshTokenSecret: changeThisRefreshTokenSecret
-  refreshTokenExpiration: 3600000
+  key:
+    access:
+      alias: "keyAliasAccess"
+      keystoreJks: "access-keystore.jks"
+      jksPassword: "changeit"
+      keyPassword: "changeit"
+      expiration: 600000
+    refresh:
+      alias: "keyAliasRefresh"
+      keystoreJks: "refresh-keystore.jks"
+      jksPassword: "changeit"
+      keyPassword: "changeit"
+      expiration: 3600000

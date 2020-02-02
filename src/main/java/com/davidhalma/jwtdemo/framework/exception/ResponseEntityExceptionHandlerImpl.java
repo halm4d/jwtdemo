@@ -1,4 +1,4 @@
-package com.davidhalma.jwtdemo.jwtframework.exception;
+package com.davidhalma.jwtdemo.framework.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +15,8 @@ import java.util.Date;
 @ControllerAdvice
 public class ResponseEntityExceptionHandlerImpl extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(JwtTokenException.class)
-    public final ResponseEntity handleNotFoundException(JwtTokenException ex, WebRequest request) {
+    @ExceptionHandler(Throwable.class)
+    public final ResponseEntity<ErrorDetails> handleNotFoundException(Throwable ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), HttpStatus.UNAUTHORIZED, ex.getMessage(), getRequestURI(request));
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDetails);
     }
