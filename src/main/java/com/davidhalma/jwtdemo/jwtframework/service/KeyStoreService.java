@@ -1,5 +1,7 @@
-package com.davidhalma.jwtdemo.jwtframework.util;
+package com.davidhalma.jwtdemo.jwtframework.service;
 
+import com.davidhalma.jwtdemo.jwtframework.property.JksProperty;
+import com.davidhalma.jwtdemo.jwtframework.property.JwtProperty;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -10,21 +12,15 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 
-@Service
 @Log4j2
-public class JwtUtils {
+@Service
+public class KeyStoreService {
 
-    private final PropertyUtils propertyUtils;
-
-    public JwtUtils(PropertyUtils propertyUtils) {
-        this.propertyUtils = propertyUtils;
-    }
-
-    public KeyStore getKeyStore(TokenType tokenType) {
-        ClassPathResource resource = new ClassPathResource(propertyUtils.getKeystoreJks(tokenType));
+    public KeyStore getKeyStore(JksProperty jksProperty) {
+        ClassPathResource resource = new ClassPathResource(jksProperty.getPath());
         try {
             KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-            keystore.load(resource.getInputStream(), propertyUtils.getJksPassword(tokenType).toCharArray());
+            keystore.load(resource.getInputStream(), jksProperty.getPassword().toCharArray());
             return keystore;
         } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
             log.error(e.getMessage());

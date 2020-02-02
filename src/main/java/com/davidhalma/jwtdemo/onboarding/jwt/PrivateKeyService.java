@@ -1,9 +1,7 @@
 package com.davidhalma.jwtdemo.onboarding.jwt;
 
-import com.davidhalma.jwtdemo.jwtframework.util.JwtUtils;
-import com.davidhalma.jwtdemo.jwtframework.service.KeyService;
-import com.davidhalma.jwtdemo.jwtframework.util.PropertyUtils;
-import com.davidhalma.jwtdemo.jwtframework.util.TokenType;
+import com.davidhalma.jwtdemo.jwtframework.service.KeyStoreService;
+import com.davidhalma.jwtdemo.jwtframework.property.JwtProperty;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
@@ -11,21 +9,19 @@ import java.security.*;
 
 @Service
 @Log4j2
-public class PrivateKeyService implements KeyService {
+public class PrivateKeyService {
 
-    private final PropertyUtils propertyUtils;
-    private final JwtUtils jwtUtils;
 
-    public PrivateKeyService(JwtUtils jwtUtils, PropertyUtils propertyUtils) {
-        this.jwtUtils = jwtUtils;
-        this.propertyUtils = propertyUtils;
+    private final KeyStoreService keyStoreService;
+
+    public PrivateKeyService(KeyStoreService keyStoreService) {
+        this.keyStoreService = keyStoreService;
     }
 
-    @Override
-    public Key getKey(TokenType tokenType) {
-        KeyStore keystore = jwtUtils.getKeyStore(tokenType);
+    public PrivateKey getKey(JwtProperty jwtProperty) {
+        KeyStore keystore = keyStoreService.getKeyStore(jwtProperty.getJks());
         try {
-            return keystore.getKey(propertyUtils.getAlias(tokenType), propertyUtils.getKeyPassword(tokenType).toCharArray());
+            return (PrivateKey) keystore.getKey(jwtProperty.getKey().getAlias(), jwtProperty.getKey().getPassword().toCharArray());
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
             log.error(e.getMessage());
         }

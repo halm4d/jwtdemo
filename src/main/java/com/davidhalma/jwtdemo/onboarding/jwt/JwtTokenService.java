@@ -1,16 +1,16 @@
 package com.davidhalma.jwtdemo.onboarding.jwt;
 
-import com.davidhalma.jwtdemo.jwtframework.service.PublicKeyService;
 import com.davidhalma.jwtdemo.jwtframework.exception.JwtTokenException;
-import com.davidhalma.jwtdemo.jwtframework.util.PropertyUtils;
-import com.davidhalma.jwtdemo.jwtframework.util.TokenType;
+import com.davidhalma.jwtdemo.jwtframework.property.AccessTokenProperty;
+import com.davidhalma.jwtdemo.jwtframework.property.JwtProperty;
+import com.davidhalma.jwtdemo.jwtframework.service.PublicKeyService;
 import io.jsonwebtoken.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Date;
 import java.util.function.Function;
@@ -23,46 +23,44 @@ public class JwtTokenService {
 
     private final PublicKeyService publicKeyService;
     private final PrivateKeyService privateKeyService;
-    private final PropertyUtils propertyUtils;
-
 
     @Autowired
-    public JwtTokenService(PublicKeyService publicKeyService, PrivateKeyService privateKeyService, PropertyUtils propertyUtils) {
+    public JwtTokenService(PublicKeyService publicKeyService,
+                           PrivateKeyService privateKeyService) {
         this.publicKeyService = publicKeyService;
         this.privateKeyService = privateKeyService;
-        this.propertyUtils = propertyUtils;
     }
 
-    public String generateJwtToken(UserDetails userDetails, TokenType tokenType){
-        Key privateKey = privateKeyService.getKey(tokenType);
+    public String generateJwtToken(UserDetails userDetails, JwtProperty jwtProperty){
+        PrivateKey privateKey = privateKeyService.getKey(jwtProperty);
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setSubject(userDetails.getUsername())
-                .setExpiration(new Date(System.currentTimeMillis() + propertyUtils.getExpiration(tokenType)))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtProperty.getExpiration()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .signWith(SignatureAlgorithm.RS256, privateKey)
                 .compact();
     }
 
-    public String getUsernameFromToken(String token, TokenType tokenType) {
-        return getAllClaimsFromToken(token, tokenType).getSubject();
+    public String getUsernameFromToken(String token, JwtProperty jwtProperty) {
+        return getAllClaimsFromToken(token, jwtProperty).getSubject();
     }
 
-    public Date getExpirationDateFromToken(String token, TokenType tokenType) {
-        return getClaimFromToken(token, tokenType, Claims::getExpiration);
+    public Date getExpirationDateFromToken(String token, JwtProperty jwtProperty) {
+        return getClaimFromToken(token, jwtProperty, Claims::getExpiration);
     }
 
-    public <T> T getClaimFromToken(String token, TokenType tokenType, Function<Claims, T> claimsTFunction) {
-        return claimsTFunction.apply(getAllClaimsFromToken(token, tokenType));
+    public <T> T getClaimFromToken(String token, JwtProperty jwtProperty, Function<Claims, T> claimsTFunction) {
+        return claimsTFunction.apply(getAllClaimsFromToken(token, jwtProperty));
     }
 
-    public Claims getAllClaimsFromToken(String token, TokenType tokenType) {
-        return parseClaimsJws(token, tokenType).getBody();
+    public Claims getAllClaimsFromToken(String token, JwtProperty jwtProperty) {
+        return parseClaimsJws(token, jwtProperty).getBody();
     }
 
-    private Jws<Claims> parseClaimsJws(String token, TokenType tokenType) {
+    private Jws<Claims> parseClaimsJws(String token, JwtProperty jwtProperty) {
         try {
-            PublicKey publicKey = publicKeyService.getKey(tokenType);
+            PublicKey publicKey = publicKeyService.getKey(jwtProperty);
             return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(getJwtToken(token));
         }catch (ExpiredJwtException e){
             throw new JwtTokenException("JWT token expired.");

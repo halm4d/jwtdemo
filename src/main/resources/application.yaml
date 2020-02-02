@@ -4,16 +4,20 @@ spring:
       uri: mongodb://localhost:27017/jwtdemo
 jwt:
   access:
-    key:
-      alias: "keyAliasAccess"
-      keystoreJks: "access-keystore.jks"
-      jksPassword: "changeit"
-      keyPassword: "changeit"
+    jwtProperty:
+      jks:
+        password: "changeit"
+        path: "access-keystore.jks"
+      key:
+        alias: "keyAliasAccess"
+        password: "changeit"
       expiration: 600000
   refresh:
-    key:
-      alias: "keyAliasRefresh"
-      keystoreJks: "refresh-keystore.jks"
-      jksPassword: "changeit"
-      keyPassword: "changeit"
+    jwtProperty:
+      jks:
+        password: "changeit"
+        path: "refresh-keystore.jks"
+      key:
+        alias: "keyAliasRefresh"
+        password: "changeit"
       expiration: 3600000

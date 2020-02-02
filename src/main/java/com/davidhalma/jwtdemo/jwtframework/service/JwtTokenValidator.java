@@ -1,13 +1,13 @@
 package com.davidhalma.jwtdemo.jwtframework.service;
 
 import com.davidhalma.jwtdemo.jwtframework.exception.JwtTokenException;
-import com.davidhalma.jwtdemo.jwtframework.util.TokenType;
+import com.davidhalma.jwtdemo.jwtframework.property.AccessTokenProperty;
 import io.jsonwebtoken.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.security.Key;
+import java.security.PublicKey;
 
 @Service
 @Log4j2
@@ -17,9 +17,11 @@ public class JwtTokenValidator {
     private static final String TOKEN_PREFIX_WITH_WHITESPACE = "Bearer ";
 
     private final PublicKeyService publicKeyService;
+    private final AccessTokenProperty accessTokenProperty;
 
-    public JwtTokenValidator(PublicKeyService publicKeyService) {
+    public JwtTokenValidator(PublicKeyService publicKeyService, AccessTokenProperty accessTokenProperty) {
         this.publicKeyService = publicKeyService;
+        this.accessTokenProperty = accessTokenProperty;
     }
 
     public void validateToken(String token){
@@ -27,10 +29,10 @@ public class JwtTokenValidator {
         parseClaimsJws(token);
     }
 
-    public Jws<Claims> parseClaimsJws(String token) {
+    public void parseClaimsJws(String token) {
         try {
-            Key publicKey = publicKeyService.getKey(TokenType.ACCESS);
-            return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(getJwtToken(token));
+            PublicKey publicKey = publicKeyService.getKey(accessTokenProperty.getJwtProperty());
+            Jwts.parser().setSigningKey(publicKey).parseClaimsJws(getJwtToken(token));
         }catch (ExpiredJwtException e){
             throw new JwtTokenException("JWT token expired.");
         }catch (IllegalArgumentException e){

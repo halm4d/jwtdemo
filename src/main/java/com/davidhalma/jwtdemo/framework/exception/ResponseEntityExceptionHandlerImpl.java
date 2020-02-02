@@ -1,5 +1,6 @@
 package com.davidhalma.jwtdemo.framework.exception;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,12 +14,14 @@ import java.util.Date;
 
 @RestController
 @ControllerAdvice
+@Log4j2
 public class ResponseEntityExceptionHandlerImpl extends ExceptionHandlerExceptionResolver {
 
     @ExceptionHandler(Throwable.class)
     public final ResponseEntity<ErrorDetails> handleNotFoundException(Throwable ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), HttpStatus.UNAUTHORIZED, ex.getMessage(), getRequestURI(request));
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDetails);
+        log.error(ex);
+        return ResponseEntity.status(500).body(errorDetails);
     }
 
     private String getRequestURI(WebRequest request) {

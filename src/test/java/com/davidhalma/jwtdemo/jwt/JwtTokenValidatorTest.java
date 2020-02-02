@@ -2,7 +2,7 @@ package com.davidhalma.jwtdemo.jwt;
 
 import com.davidhalma.jwtdemo.jwtframework.service.JwtTokenValidator;
 import com.davidhalma.jwtdemo.onboarding.jwt.JwtTokenService;
-import com.davidhalma.jwtdemo.jwtframework.util.TokenType;
+import com.davidhalma.jwtdemo.onboarding.jwt.TokenType;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

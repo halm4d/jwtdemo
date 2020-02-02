@@ -2,6 +2,8 @@ package com.davidhalma.jwtdemo.onboarding.controller;
 
 import com.davidhalma.jwtdemo.jwtframework.annotation.JwtSecured;
 import com.davidhalma.jwtdemo.onboarding.model.AuthenticationRequest;
+import com.davidhalma.jwtdemo.onboarding.model.JwtToken;
+import com.davidhalma.jwtdemo.onboarding.model.db.MDBUser;
 import com.davidhalma.jwtdemo.onboarding.service.AuthenticationService;
 import com.davidhalma.jwtdemo.onboarding.service.JwtAuthenticationService;
 import lombok.extern.log4j.Log4j2;
@@ -14,29 +16,32 @@ import org.springframework.web.bind.annotation.*;
 @Log4j2
 public class AuthenticationController {
 
-    @Autowired
-    private JwtAuthenticationService jwtAuthenticationService;
-    @Autowired
-    private AuthenticationService authenticationService;
+    private final JwtAuthenticationService jwtAuthenticationService;
+    private final AuthenticationService authenticationService;
+
+    public AuthenticationController(JwtAuthenticationService jwtAuthenticationService, AuthenticationService authenticationService) {
+        this.jwtAuthenticationService = jwtAuthenticationService;
+        this.authenticationService = authenticationService;
+    }
 
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+    public ResponseEntity<JwtToken> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) {
         return ResponseEntity.ok(jwtAuthenticationService.getJwtToken(authenticationRequest));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody AuthenticationRequest authenticationRequest){
+    public ResponseEntity<MDBUser> register(@RequestBody AuthenticationRequest authenticationRequest){
         return ResponseEntity.ok(authenticationService.register(authenticationRequest));
     }
 
     @PostMapping("/refreshToken")
-    public ResponseEntity<?> refreshToken(@RequestHeader("Authorization") String refreshToken) throws Exception {
+    public ResponseEntity<JwtToken> refreshToken(@RequestHeader("Authorization") String refreshToken) {
         return ResponseEntity.ok(jwtAuthenticationService.refreshToken(refreshToken));
     }
 
     @JwtSecured
     @GetMapping("/securedpage")
-    public ResponseEntity<?> securedpage(){
+    public ResponseEntity<String> securedpage(){
         log.info("securedpage");
         return ResponseEntity.ok("This page is secret.");
     }
