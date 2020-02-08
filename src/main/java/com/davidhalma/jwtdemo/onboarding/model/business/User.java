@@ -19,7 +19,7 @@ public class User implements UserDetails {
     private boolean isCredentialsNonExpired;
     private boolean isEnabled;
 
-    public enum Role {
+    public enum RoleEnum {
         USER,
         ADMIN
     }

@@ -4,8 +4,8 @@ import com.davidhalma.jwtdemo.jwtframework.annotation.JwtSecured;
 import com.davidhalma.jwtdemo.onboarding.model.AuthenticationRequest;
 import com.davidhalma.jwtdemo.onboarding.model.JwtToken;
 import com.davidhalma.jwtdemo.onboarding.model.db.MDBUser;
-import com.davidhalma.jwtdemo.onboarding.service.AuthenticationService;
 import com.davidhalma.jwtdemo.onboarding.service.JwtAuthenticationService;
+import com.davidhalma.jwtdemo.onboarding.service.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +17,12 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     private final JwtAuthenticationService jwtAuthenticationService;
-    private final AuthenticationService authenticationService;
+    private final UserService userService;
 
-    public AuthenticationController(JwtAuthenticationService jwtAuthenticationService, AuthenticationService authenticationService) {
+
+    public AuthenticationController(JwtAuthenticationService jwtAuthenticationService, UserService userService) {
         this.jwtAuthenticationService = jwtAuthenticationService;
-        this.authenticationService = authenticationService;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
@@ -31,7 +32,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<MDBUser> register(@RequestBody AuthenticationRequest authenticationRequest){
-        return ResponseEntity.ok(authenticationService.register(authenticationRequest));
+        return ResponseEntity.ok(userService.register(authenticationRequest));
     }
 
     @PostMapping("/refreshToken")

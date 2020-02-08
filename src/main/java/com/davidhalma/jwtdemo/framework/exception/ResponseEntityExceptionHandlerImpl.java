@@ -18,10 +18,10 @@ import java.util.Date;
 public class ResponseEntityExceptionHandlerImpl extends ExceptionHandlerExceptionResolver {
 
     @ExceptionHandler(Throwable.class)
-    public final ResponseEntity<ErrorDetails> handleNotFoundException(Throwable ex, WebRequest request) {
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), HttpStatus.UNAUTHORIZED, ex.getMessage(), getRequestURI(request));
+    public final ResponseEntity<ErrorDetails> handleInternalException(Throwable ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), getRequestURI(request));
         log.error(ex);
-        return ResponseEntity.status(500).body(errorDetails);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
     }
 
     private String getRequestURI(WebRequest request) {

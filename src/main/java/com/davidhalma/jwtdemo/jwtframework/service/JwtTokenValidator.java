@@ -2,6 +2,7 @@ package com.davidhalma.jwtdemo.jwtframework.service;
 
 import com.davidhalma.jwtdemo.jwtframework.exception.JwtTokenException;
 import com.davidhalma.jwtdemo.jwtframework.property.AccessTokenProperty;
+import com.davidhalma.jwtdemo.jwtframework.property.JwtProperty;
 import io.jsonwebtoken.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class JwtTokenValidator {
 
     public void parseClaimsJws(String token) {
         try {
-            PublicKey publicKey = publicKeyService.getKey(accessTokenProperty.getJwtProperty());
+            PublicKey publicKey = publicKeyService.getKey(getAccessTokenProperty());
             Jwts.parser().setSigningKey(publicKey).parseClaimsJws(getJwtToken(token));
         }catch (ExpiredJwtException e){
             throw new JwtTokenException("JWT token expired.");
@@ -44,6 +45,10 @@ public class JwtTokenValidator {
         }catch (SignatureException e){
             throw new JwtTokenException("Bad JWT token signature.");
         }
+    }
+
+    private JwtProperty getAccessTokenProperty() {
+        return accessTokenProperty.getJwtProperty();
     }
 
     private void validateRequestTokenHeader(String requestTokenHeader) {

@@ -2,7 +2,6 @@ package com.davidhalma.jwtdemo.onboarding.service;
 
 import com.davidhalma.jwtdemo.jwtframework.property.AccessTokenProperty;
 import com.davidhalma.jwtdemo.jwtframework.property.JwtProperty;
-import com.davidhalma.jwtdemo.jwtframework.service.JwtTokenValidator;
 import com.davidhalma.jwtdemo.onboarding.exception.AuthenticationException;
 import com.davidhalma.jwtdemo.onboarding.jwt.JwtTokenService;
 import com.davidhalma.jwtdemo.onboarding.jwt.RefreshTokenProperty;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class JwtAuthenticationService {
+
     public final AuthenticationManager authenticationManager;
     public final JwtUserDetailsService userDetailsService;
     private final JwtTokenService jwtTokenService;
@@ -52,7 +52,7 @@ public class JwtAuthenticationService {
 
     private JwtToken convertJwtToken(String token, String refreshToken) {
         return JwtToken.builder()
-                .token(token)
+                .accessToken(token)
                 .refreshToken(refreshToken)
                 .expirationDate(jwtTokenService.getExpirationDateFromToken(token, getAccessTokenProperty()))
                 .build();
@@ -64,7 +64,7 @@ public class JwtAuthenticationService {
         } catch (DisabledException e) {
             throw new AuthenticationException("Account is disabled.");
         } catch (BadCredentialsException e) {
-            throw new AuthenticationException("Wrong password.");
+            throw new AuthenticationException("Wrong username or password.");
         }catch (LockedException e){
             throw new AuthenticationException("Account is locked.");
         }
