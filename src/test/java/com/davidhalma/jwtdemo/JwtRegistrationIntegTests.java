@@ -2,7 +2,6 @@ package com.davidhalma.jwtdemo;
 
 import com.davidhalma.jwtdemo.onboarding.controller.AuthenticationController;
 import com.davidhalma.jwtdemo.onboarding.model.AuthenticationRequest;
-import com.davidhalma.jwtdemo.onboarding.model.business.User;
 import com.davidhalma.jwtdemo.onboarding.model.db.MDBUser;
 import com.davidhalma.jwtdemo.onboarding.repository.UserRepository;
 import org.junit.Test;
@@ -11,11 +10,9 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Collections;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,13 +29,15 @@ public class JwtRegistrationIntegTests {
     private UserRepository userRepository;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtTestUtils jwtTestUtils;
 
     @Test
     public void test_register_ok() throws Exception {
         String username = "testUser";
         String password = "testPass123";
 
-        Mockito.when(userRepository.save(any(MDBUser.class))).thenReturn(getMDBUser(username, password));
+        Mockito.when(userRepository.save(any(MDBUser.class))).thenReturn(jwtTestUtils.getMDBUser(username, password));
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setUsername(username);
@@ -66,7 +65,7 @@ public class JwtRegistrationIntegTests {
         String username = "testUser";
         String password = "testPass123";
 
-        Mockito.when(userRepository.save(any(MDBUser.class))).thenReturn(getMDBUser(username, password));
+        Mockito.when(userRepository.save(any(MDBUser.class))).thenReturn(jwtTestUtils.getMDBUser(username, password));
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setUsername(username);
@@ -87,19 +86,5 @@ public class JwtRegistrationIntegTests {
 
         assertEquals(username, body.getUsername());
         assertTrue(passwordEncoder.matches(password, body.getPassword()));
-    }
-
-    private MDBUser getMDBUser(String username, String password){
-        MDBUser mdbUser = new MDBUser();
-        mdbUser.setId("1");
-        mdbUser.setUsername(username);
-        mdbUser.setPassword(passwordEncoder.encode(password));
-        mdbUser.setIsEnabled(true);
-        mdbUser.setIsCredentialsNonExpired(true);
-        mdbUser.setIsAccountNonLocked(true);
-        mdbUser.setIsAccountNonExpired(true);
-        mdbUser.setAuthorities(Collections.singleton(new SimpleGrantedAuthority(User.RoleEnum.USER.name())));
-        mdbUser.setCreatedAt(new Date());
-        return mdbUser;
     }
 }
